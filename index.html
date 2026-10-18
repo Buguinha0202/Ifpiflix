@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#141414">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="IFPIFLIX - Projeto acadêmico de Filosofia sobre a Revolução Científica Moderna (Empirismo vs Racionalismo), catálogo de paródias e acervo da turma.">
+    
+    <!-- Metadados de Compartilhamento Social (Open Graph & Twitter) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="IFPIFLIX — O Streaming da Filosofia & Tecnologia">
+    <meta property="og:description" content="A maior batalha intelectual: Empirismo vs Racionalismo, catálogo de filmes paródias e acervo de trabalhos da turma.">
+    <meta property="og:image" content="https://buguinha0202.github.io/Ifpiflix-projetor/banner.png">
+    <meta property="og:site_name" content="IFPIFLIX">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IFPIFLIX — O Streaming da Filosofia & Tecnologia">
+    <meta name="twitter:description" content="A maior batalha intelectual: Empirismo vs Racionalismo, catálogo de filmes paródias e acervo de trabalhos da turma.">
+    <meta name="twitter:image" content="https://buguinha0202.github.io/Ifpiflix-projetor/banner.png">
+    
+    <!-- Favicon Oficial IFPIFLIX -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23141414'/><path d='M38 20h24v60H38z' fill='%23E50914'/><path d='M30 20h16v60H30z' fill='%23B81D24'/></svg>">
+    
+    <title>IFPIFLIX - Filosofia: A Ciência Moderna</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css?v=3.8">
+</head>
+<body>
+
+    <!-- FEATURE 4: HOLOFOTE (TEATRO DAS SOMBRAS) -->
+    <div id="spotlight-overlay"></div>
+
+    <!-- TELA DE INTRODUÇÃO (TUDUM) -->
+     <div id="splash-screen" class="screen">
+        <div class="splash-logo" id="splash-logo-el">IFPIFLIX</div>
+        <button id="skip-intro-btn" onclick="window.forceSkipIntro()">Pular Abertura <i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <div id="loading-screen" class="screen"><div class="spinner"></div><div class="loading-text" id="loading-perc">0%</div></div>
+
+    <!-- TELA DE PERFIS DA TURMA -->
+    <div id="profile-screen" class="screen active">
+        <h1>Quem est&aacute; assistindo?</h1>
+        <div class="profiles-container" id="profiles-container">
+            <button type="button" class="profile-card" data-profile="Admin">
+                <div class="avatar av-admin"><i class="fa-solid fa-user-shield"></i></div>
+                <span>Admin</span>
+            </button>
+            <button type="button" class="profile-card" data-profile="Turma IFPI">
+                <div class="avatar av-turma"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span>Turma IFPI</span>
+            </button>
+            <button type="button" class="profile-card" data-profile="Professor(a)">
+                <div class="avatar av-prof"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <span>Professor(a)</span>
+            </button>
+            <button type="button" class="profile-card" data-profile="Visitante">
+                <div class="avatar av-visitante"><i class="fa-solid fa-masks-theater"></i></div>
+                <span>Visitante</span>
+            </button>
+            <button type="button" class="profile-card profile-card-add" id="btn-add-profile" onclick="window.openAddProfileModal()" aria-label="Adicionar Perfil">
+                <div class="avatar av-add"><i class="fa-solid fa-plus"></i></div>
+                <span>Adicionar Perfil</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CRIAR PERFIL (ESTILO NETFLIX) -->
+    <div id="add-profile-modal" class="add-profile-modal-overlay" onclick="window.closeAddProfileModal(event)">
+        <div class="add-profile-box" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close-btn" aria-label="Fechar" onclick="window.closeAddProfileModal(event, true)"><i class="fa-solid fa-xmark"></i></button>
+            <h2>Criar Perfil</h2>
+            <p class="add-profile-sub">Crie seu perfil personalizado para salvar seu progresso no IFPIFLIX.</p>
+            
+            <div class="add-profile-form">
+                <div class="avatar-preview-wrapper">
+                    <div class="avatar av-custom-preview" id="profile-preview-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+                
+                <div class="add-profile-inputs">
+                    <label for="new-profile-name">Nome do perfil:</label>
+                    <input type="text" id="new-profile-name" placeholder="Ex: Carlos, Ana..." maxlength="15" autocomplete="off">
+                    
+                    <label>Escolha seu Avatar:</label>
+                    <div class="avatar-color-options" id="avatar-color-options">
+                        <button type="button" class="avatar-opt-btn active" data-color="red" data-icon="fa-solid fa-user" style="background: linear-gradient(135deg, #e50914, #7f0000);"><i class="fa-solid fa-user"></i></button>
+                        <button type="button" class="avatar-opt-btn" data-color="blue" data-icon="fa-solid fa-rocket" style="background: linear-gradient(135deg, #3b82f6, #1e3a8a);"><i class="fa-solid fa-rocket"></i></button>
+                        <button type="button" class="avatar-opt-btn" data-color="green" data-icon="fa-solid fa-laptop-code" style="background: linear-gradient(135deg, #10b981, #064e3b);"><i class="fa-solid fa-laptop-code"></i></button>
+                        <button type="button" class="avatar-opt-btn" data-color="gold" data-icon="fa-solid fa-crown" style="background: linear-gradient(135deg, #f59e0b, #78350f);"><i class="fa-solid fa-crown"></i></button>
+                        <button type="button" class="avatar-opt-btn" data-color="purple" data-icon="fa-solid fa-gamepad" style="background: linear-gradient(135deg, #8b5cf6, #4c1d95);"><i class="fa-solid fa-gamepad"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="add-profile-actions">
+                <button type="button" class="btn-save-profile" onclick="window.saveNewProfile()">Salvar Perfil</button>
+                <button type="button" class="btn-cancel-profile" onclick="window.closeAddProfileModal(event, true)">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ENVIAR TRABALHO DA TURMA (EXCLUSIVO PROFESSOR) -->
+    <div id="submit-work-modal" class="add-profile-modal-overlay" onclick="window.closeSubmitWorkModal(event)">
+        <div class="add-profile-box submit-work-box" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close-btn" aria-label="Fechar" onclick="window.closeSubmitWorkModal(event, true)"><i class="fa-solid fa-xmark"></i></button>
+            <div class="submit-work-header">
+                <span class="prof-tag"><i class="fa-solid fa-chalkboard-user"></i> Painel do Acervo &amp; Professor</span>
+                <h2>Adicionar Trabalhos ao Acervo</h2>
+                <p class="add-profile-sub">Cadastre um trabalho individual ou cole vários links/arquivos de uma vez sem preencher ficha por ficha.</p>
+            </div>
+
+            <div class="submit-mode-tabs">
+                <button type="button" class="submit-mode-tab active" id="tab-btn-single" onclick="window.switchSubmitTab('single')">
+                    <i class="fa-solid fa-file-circle-plus"></i> Individual
+                </button>
+                <button type="button" class="submit-mode-tab" id="tab-btn-bulk" onclick="window.switchSubmitTab('bulk')">
+                    <i class="fa-solid fa-bolt"></i> Importar Vários em Lote
+                </button>
+            </div>
+            
+            <!-- ABA 1: CADASTRO INDIVIDUAL -->
+            <form id="form-submit-work" onsubmit="window.saveNewWork(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sw-title">Título do Trabalho / Equipe *</label>
+                        <input type="text" id="sw-title" placeholder="Ex: O Exterminador de Bugs" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="sw-category">Matéria / Disciplina *</label>
+                        <select id="sw-category" required>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="História">História</option>
+                            <option value="Sociologia">Sociologia</option>
+                            <option value="Língua Portuguesa">Língua Portuguesa</option>
+                            <option value="Língua Inglesa">Língua Inglesa</option>
+                            <option value="Hardware & Arquitetura">Hardware &amp; Arquitetura</option>
+                            <option value="Segurança & Redes">Segurança &amp; Redes</option>
+                            <option value="Programação & T.I.">Programação &amp; T.I.</option>
+                            <option value="Inteligência Artificial & IoT">Inteligência Artificial &amp; IoT</option>
+                            <option value="Sistemas Operacionais">Sistemas Operacionais</option>
+                            <option value="Banco de Dados">Banco de Dados</option>
+                            <option value="Outra Disciplina">Outra Disciplina</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sw-work-group">Nome da Barra (Trabalho / Seminário)</label>
+                        <input type="text" id="sw-work-group" placeholder="Ex: Seminário 1 - Ciência Moderna" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="sw-year">Bimestre / Ano</label>
+                        <input type="text" id="sw-year" placeholder="Ex: 2026 • 1º Bimestre" value="2026 • 1º Bimestre" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sw-authors">Alunos / Integrantes do Grupo *</label>
+                    <input type="text" id="sw-authors" placeholder="Ex: Lucas, Camila, Rafael, João..." required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="sw-synopsis">Sinopse / Resumo (opcional — geramos automático se deixar curto)</label>
+                    <textarea id="sw-synopsis" rows="2" placeholder="Breve resumo da apresentação ou vídeo..." required></textarea>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sw-pdf">Link ou Arquivo do PDF (Ex: trabalhos/meu_slide.pdf)</label>
+                        <input type="text" id="sw-pdf" placeholder="trabalhos/arquivo.pdf ou https://..." autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="sw-trailer">Link do Vídeo / YouTube (URL ou ID)</label>
+                        <input type="text" id="sw-trailer" placeholder="Ex: https://youtube.com/watch?v=..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sw-cover">Imagem de Capa (Opcional — puxa do YouTube ou gera capa automática)</label>
+                    <div class="cover-input-row">
+                        <input type="text" id="sw-cover" placeholder="Deixe vazio para capa automática!" autocomplete="off">
+                        <select id="sw-cover-theme" onchange="window.onWorkThemeChange()">
+                            <option value="">Capa Automática da Matéria</option>
+                            <option value="p-tema1">Tema Filosofia Clássica</option>
+                            <option value="p-stranger">Tema Ficção / Stranger</option>
+                            <option value="p-opensource">Tema Código / Open Source</option>
+                            <option value="p-dragon">Tema Inteligência Artificial</option>
+                            <option value="p-firewall">Tema Segurança / Redes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="add-profile-actions">
+                    <button type="submit" class="btn-save-profile"><i class="fa-solid fa-cloud-arrow-up"></i> Publicar no Acervo</button>
+                    <button type="button" class="btn-cancel-profile" onclick="window.closeSubmitWorkModal(event, true)">Cancelar</button>
+                </div>
+            </form>
+
+            <!-- ABA 2: IMPORTAÇÃO RÁPIDA EM LOTE -->
+            <form id="form-bulk-work" style="display: none;" onsubmit="window.saveBulkWorks(event)">
+                <div class="bulk-import-help">
+                    <strong><i class="fa-solid fa-wand-magic-sparkles"></i> Importador Inteligente:</strong> Cole uma linha por trabalho. Você pode colar só o link do YouTube/PDF ou usar o formato:<br>
+                    <code>Título | Alunos/Grupo | Link do PDF ou YouTube</code><br>
+                    O sistema cria automaticamente a capa, a sinopse e organiza na barra escolhida abaixo!
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="bw-category">Matéria de todos esses arquivos *</label>
+                        <select id="bw-category" required>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="História">História</option>
+                            <option value="Sociologia">Sociologia</option>
+                            <option value="Língua Portuguesa">Língua Portuguesa</option>
+                            <option value="Língua Inglesa">Língua Inglesa</option>
+                            <option value="Hardware & Arquitetura">Hardware &amp; Arquitetura</option>
+                            <option value="Segurança & Redes">Segurança &amp; Redes</option>
+                            <option value="Programação & T.I.">Programação &amp; T.I.</option>
+                            <option value="Inteligência Artificial & IoT">Inteligência Artificial &amp; IoT</option>
+                            <option value="Sistemas Operacionais">Sistemas Operacionais</option>
+                            <option value="Banco de Dados">Banco de Dados</option>
+                            <option value="Outra Disciplina">Outra Disciplina</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bw-work-group">Nome da Barra (Qual foi o Trabalho/Seminário?) *</label>
+                        <input type="text" id="bw-work-group" placeholder="Ex: Seminário de Criptografia" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bw-year">Bimestre / Ano</label>
+                    <input type="text" id="bw-year" placeholder="Ex: 2025 • 2º Bimestre" value="2025 • Acervo da Turma" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="bw-lines">Lista de Trabalhos / Links (1 por linha) *</label>
+                    <textarea id="bw-lines" rows="5" placeholder="Exemplo:&#10;Grupo 1 - Criptografia RSA | João, Maria | trabalhos/rsa.pdf&#10;Paródia Firewall | Pedro, Ana | https://www.youtube.com/watch?v=s-TRlV9D6FI&#10;trabalhos/seminario_redes.pdf" required></textarea>
+                </div>
+
+                <div class="add-profile-actions">
+                    <button type="submit" class="btn-save-profile"><i class="fa-solid fa-bolt"></i> Importar Todos Automaticamente</button>
+                    <button type="button" class="btn-cancel-profile" onclick="window.closeSubmitWorkModal(event, true)">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST DE TURNO -->
+    <div id="turn-toast">
+        <i class="fa-solid fa-microphone-lines" style="font-size: 2rem; color: var(--netflix-red);"></i>
+        <div>
+            <span style="font-size: 0.8rem; color: #ccc;">Passando a palavra...</span><br>
+            <span id="toast-presenter-name" style="font-size: 1.2rem; font-weight: bold; color: #fff;">Nome</span>
+        </div>
+    </div>
+
+    <!-- TELA INICIAL IFPIFLIX -->
+    <div id="home-screen" class="screen">
+        <nav class="home-nav">
+            <div class="nav-left-group">
+                <div class="nav-logo" onclick="window.filterNavCategory('inicio')">IFPIFLIX</div>
+                
+                <!-- Menu de Categorias no Topo (Estilo Netflix) -->
+                <ul class="nav-categories" id="nav-categories">
+                    <li class="nav-cat-item active" data-cat="inicio" onclick="window.filterNavCategory('inicio')">Início</li>
+                    <li class="nav-cat-item" data-cat="top5" onclick="window.filterNavCategory('top5')">Em Alta</li>
+                    <li class="nav-cat-item" data-cat="filosofia" onclick="window.filterNavCategory('filosofia')">Filosofia</li>
+                    <li class="nav-cat-item" data-cat="ti" onclick="window.filterNavCategory('ti')">Séries de T.I.</li>
+                    <li class="nav-cat-item" data-cat="trabalhos" onclick="window.filterNavCategory('trabalhos')">Trabalhos Antigos</li>
+                    <li class="nav-cat-item" data-cat="minha-lista" onclick="window.filterNavCategory('minha-lista')">Minha Lista</li>
+                </ul>
+            </div>
+            
+            <div class="nav-right">
+                <!-- Botão Enviar Trabalho (EXCLUSIVO PROFESSOR) -->
+                <button type="button" class="btn-professor-upload" id="btn-professor-upload" style="display: none;" onclick="window.openSubmitWorkModal()" title="Cadastrar / Enviar Trabalho da Turma (Exclusivo Professor)">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span class="btn-upload-text">Enviar Trabalho</span>
+                </button>
+
+                <!-- Lupa de Pesquisa -->
+                <div class="search-box" id="search-box">
+                    <button type="button" class="search-icon" id="search-icon-btn" aria-label="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="search" id="search-input" placeholder="Títulos, gêneros..." aria-label="Pesquisar títulos e gêneros" enterkeyhint="search" autocomplete="off">
+                </div>
+
+                <!-- Botão Surpreenda-me (Roleta) -->
+                <button type="button" class="btn-surprise" id="btn-surprise-me" onclick="window.triggerSurpriseMe()" title="Surpreenda-me (Sorteador de Filmes)">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <span class="btn-surprise-text">Surpreenda-me</span>
+                </button>
+
+                <!-- Dropdown de Perfil -->
+                <div class="nav-profile-wrapper" id="nav-profile-wrapper">
+                    <button type="button" class="nav-profile-btn" id="nav-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="Menu do perfil">
+                        <span id="nav-profile-name" style="font-weight:bold;">Admin</span>
+                        <i class="fa-solid fa-user-circle" style="font-size:1.5rem;"></i>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </button>
+
+                    <div class="profile-dropdown">
+                        <div class="dropdown-item" onclick="window.switchScreen('profile-screen')">
+                            <i class="fa-solid fa-users"></i> Trocar de Perfil
+                        </div>
+                        <div class="dropdown-item teacher-only" id="dropdown-upload-item" style="display: none;" onclick="window.openSubmitWorkModal()">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Enviar Trabalho da Turma
+                        </div>
+                        <div class="dropdown-item" onclick="window.openInfoModal('conta')">
+                            <i class="fa-regular fa-user"></i> Conta
+                        </div>
+                        <div class="dropdown-item" onclick="window.openInfoModal('ajuda')">
+                            <i class="fa-regular fa-circle-question"></i> Central de Ajuda
+                        </div>
+                        <div class="dropdown-item" onclick="window.openResumoModal()">
+                            <i class="fa-solid fa-book-open"></i> Guia de Estudos (Resumo)
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item sair" onclick="window.logoutIfpiflix()">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair da IFPIFLIX
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav> 
+        
+        <!-- BANNER PRINCIPAL (HERO) -->
+        <div class="hero">
+            <div class="hero-content">
+                <div style="color: var(--rpg-gold); font-weight: bold; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 8px;">
+                    <i class="fa-solid fa-clapperboard"></i> FILME ORIGINAL &bull; IFPI FLIX
+                </div>
+                <h1>GUERRA CIVIL</h1>
+                <p style="font-size: 1.3rem; margin-bottom: 5px; color: var(--netflix-red); font-weight: bold; letter-spacing: 1px;">
+                    EMPIRISMO VS RACIONALISMO
+                </p>
+                <p style="font-size: 1.15rem; margin-bottom: 15px; color: #ccc; line-height: 1.5;">
+                    A Revolu&ccedil;&atilde;o Cient&iacute;fica Moderna, a queda dos dogmas e a forja do M&eacute;todo Cient&iacute;fico por Newton.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-play" onclick="window.startCinematicMovie()"><i class="fa-solid fa-play"></i> Assistir ao Filme</button>
+                    <button class="btn-info" onclick="window.openTitleModal('guerra-civil')"><i class="fa-solid fa-list"></i> Ver Epis&oacute;dios</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATÁLOGO GERAL REORGANIZADO -->
+        <div class="catalog-container">
+            
+            <!-- LINHA: CONTINUAR ASSISTINDO (Estilo Netflix) -->
+            <div id="continue-watching-container" style="display: none; margin-bottom: 25px;">
+                <h2 class="row-title" id="continue-watching-title">Continuar assistindo</h2>
+                <div class="continue-watching-grid" id="continue-watching-grid">
+                    <!-- Cards de progresso injetados via JS -->
+                </div>
+            </div>
+
+            <!-- LINHA: TRABALHOS CADASTRADOS PELO PROFESSOR (Injetados via JS) -->
+            <div id="teacher-works-container" style="display: none; margin-bottom: 30px;">
+                <h2 class="row-title"><span class="teacher-badge"><i class="fa-solid fa-chalkboard-user"></i> Acervo</span> Trabalhos Cadastrados pelo(a) Professor(a)</h2>
+                <div class="posters-container" id="teacher-works-grid">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </div>
+
+            <!-- LINHA: TOP 5 NO IFPI HOJE (Estilo Netflix com números gigantes lado a lado) -->
+            <div id="top5-section" class="catalog-section" style="margin-bottom: 30px;">
+                <h2 class="row-title"><span class="top10-badge">TOP 5</span> de hoje no IFPI</h2>
+                <div class="top10-container" id="top10-container">
+                    <div class="top10-item" onclick="window.openTitleModal('guerra-civil')">
+                        <div class="top10-rank">1</div>
+                        <div class="card-portrait p-tema2" data-movie="guerra-civil" role="button" tabindex="0" aria-label="Guerra Civil">
+                            <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #fff; font-weight: bold; margin-bottom: 4px;">TOP 1</span><h4>Guerra Civil</h4></div>
+                        </div>
+                    </div>
+                    <div class="top10-item" onclick="window.openTitleModal('tema-1')">
+                        <div class="top10-rank">2</div>
+                        <div class="card-portrait p-tema1" data-movie="tema-1" role="button" tabindex="0" aria-label="Invocação do Dogma">
+                            <div class="card-portrait-content"><span style="font-size: 0.65rem; color: var(--rpg-gold); font-weight: bold; margin-bottom: 4px;">TOP 2</span><h4>Invocação do Dogma</h4></div>
+                        </div>
+                    </div>
+                    <div class="top10-item" onclick="window.openTitleModal('tema-4')">
+                        <div class="top10-rank">3</div>
+                        <div class="card-portrait p-tema4" data-movie="tema-4" role="button" tabindex="0" aria-label="Obsessão: Falsificabilidade">
+                            <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #ffd700; font-weight: bold; margin-bottom: 4px;">TOP 3</span><h4>Obsessão: Falsificabilidade</h4></div>
+                        </div>
+                    </div>
+                    <div class="top10-item" onclick="window.openTitleModal('tema-3')">
+                        <div class="top10-rank">4</div>
+                        <div class="card-portrait p-tema3" data-movie="tema-3" role="button" tabindex="0" aria-label="Devoradores de Espaço-Tempo">
+                            <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #00f0ff; font-weight: bold; margin-bottom: 4px;">TEMA 03</span><h4>Devoradores de Espaço-Tempo</h4></div>
+                        </div>
+                    </div>
+                    <div class="top10-item" onclick="window.openTitleModal('tema-5')">
+                        <div class="top10-rank">5</div>
+                        <div class="card-portrait p-tema5" data-movie="tema-5" role="button" tabindex="0" aria-label="Não Olhe para a Ética">
+                            <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #fff; font-weight: bold; margin-bottom: 4px;">TEMA 05</span><h4>Não Olhe para a Ética</h4></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINHA: MINHA LISTA (Injetada via JS) -->
+            <div id="minha-lista-container" style="display: none; margin-bottom: 30px;">
+                <h2 class="row-title">Minha Lista</h2>
+                <div class="posters-container" id="minha-lista-grid">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </div>
+
+            <!-- LINHA DISNEY+: COLEÇÕES DE TRABALHOS DA TURMA -->
+            <div id="disney-collections-row" class="catalog-section disney-collections-section" style="margin-bottom: 36px;">
+                <h2 class="row-title" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-shapes" style="color: var(--netflix-red); font-size: 1.1rem;"></i>
+                        <span>Coleções dos Trabalhos</span>
+                    </span>
+                    <a href="#" onclick="event.preventDefault(); window.openAcervoScreen();" style="font-size: 0.88rem; color: #aaa; text-decoration: none; font-weight: 600;">Ver Acervo Completo &gt;</a>
+                </h2>
+                <div class="disney-collections-row" id="disney-collections-grid">
+                    <!-- Cards gerados via JS estilo Disney+ -->
+                </div>
+            </div>
+            
+            <!-- LINHA 1: LANÇAMENTOS DOS 5 TEMAS -->
+            <div id="filosofia-row" class="catalog-section" style="margin-bottom: 30px;">
+                <h2 class="row-title">Lançamentos da Turma • Os 5 Temas de Filosofia</h2>
+                <div class="posters-container">
+                    <div class="card-portrait p-tema1" data-movie="tema-1" role="button" tabindex="0" aria-label="Invocação do Dogma">
+                        <div class="card-portrait-content"><span style="font-size: 0.65rem; color: var(--rpg-gold); font-weight: bold; margin-bottom: 4px;">TEMA 01</span><h4>Invocação do Dogma</h4></div>
+                    </div>
+                    <div class="card-portrait p-tema2" style="border-color: var(--netflix-red); box-shadow: 0 0 15px rgba(229,9,20,0.5);" data-movie="guerra-civil" role="button" tabindex="0" aria-label="Guerra Civil">
+                        <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #fff; font-weight: bold; margin-bottom: 4px;">TEMA 02 </span><h4>Guerra Civil</h4></div>
+                    </div>
+                    <div class="card-portrait p-tema3" data-movie="tema-3" role="button" tabindex="0" aria-label="Devoradores de Espaço-Tempo">
+                        <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #00f0ff; font-weight: bold; margin-bottom: 4px;">TEMA 03</span><h4>Devoradores de Espaço-Tempo</h4></div>
+                    </div>
+                    <div class="card-portrait p-tema4" data-movie="tema-4" role="button" tabindex="0" aria-label="Obsessão: Falsificabilidade">
+                        <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #ffd700; font-weight: bold; margin-bottom: 4px;">TEMA 04</span><h4>Obsessão: Falsificabilidade</h4></div>
+                    </div>
+                    <div class="card-portrait p-tema5" data-movie="tema-5" role="button" tabindex="0" aria-label="Não Olhe para a Ética">
+                        <div class="card-portrait-content"><span style="font-size: 0.65rem; color: #fff; font-weight: bold; margin-bottom: 4px;">TEMA 05</span><h4>Não Olhe para a Ética</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINHA 2: SÉRIES E CURTAS DE T.I. -->
+            <div id="ti-row" class="catalog-section" style="margin-bottom: 30px;">
+                <h2 class="row-title">Séries e Curtas de T.I.</h2>
+                <div class="posters-container">
+                    <div class="card-portrait p-stranger" data-movie="stranger-pings" role="button" tabindex="0" aria-label="Stranger Pings"><div class="card-portrait-content"><h4>Stranger Pings</h4></div></div>
+                    <div class="card-portrait p-dragon" data-movie="treinar-ia" role="button" tabindex="0" aria-label="Como Treinar a sua I.A."><div class="card-portrait-content"><h4>Como Treinar a sua I.A.</h4></div></div>
+                    <div class="card-portrait p-pix" data-movie="deepfake-pix" role="button" tabindex="0" aria-label="Deepfake: O Preço do Pix"><div class="card-portrait-content"><h4>Deepfake: O Preço do Pix</h4></div></div>
+                    <div class="card-portrait p-opensource" data-movie="open-source" role="button" tabindex="0" aria-label="Open Source"><div class="card-portrait-content"><h4>Open Source</h4></div></div>
+                    <div class="card-portrait p-kpop" data-movie="kpop" role="button" tabindex="0" aria-label="Guerreiras do Pop 3"><div class="card-portrait-content"><h4>Guerreiras do Pop 3</h4></div></div>
+                    <div class="card-portrait p-procurando" data-movie="procurando-ip" role="button" tabindex="0" aria-label="Procurando IP"><div class="card-portrait-content"><h4>Procurando IP</h4></div></div>
+                    <div class="card-portrait p-nicolas" data-movie="nicolas" role="button" tabindex="0" aria-label="Nicolas O Grande"><div class="card-portrait-content"><h4>Nicolas O Grande</h4></div></div>
+                    <div class="card-portrait p-lalalan" data-movie="lalalan" role="button" tabindex="0" aria-label="La La LAN"><div class="card-portrait-content"><h4>La La LAN</h4></div></div>
+                </div>
+            </div>
+
+            <!-- LINHA 3: TRABALHOS ANTIGOS -->
+            <div id="trabalhos-row" class="catalog-section" style="margin-bottom: 30px;">
+                <h2 class="row-title" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>Trabalhos Antigos</span>
+                    <a href="#" onclick="event.preventDefault(); window.openAcervoScreen();" style="font-size: 0.88rem; color: #aaa; text-decoration: none; font-weight: 600;">Ver todos &gt;</a>
+                </h2>
+                <div class="landscape-row">
+                    <div class="card-landscape p-mitm" data-movie="mitm" role="button" tabindex="0" aria-label="O Homem no Meio"><div class="card-landscape-content"><h4>O Homem no Meio</h4></div></div>
+                    <div class="card-landscape p-firewall" data-movie="firewall" role="button" tabindex="0" aria-label="A Muralha de Fogo"><div class="card-landscape-content"><h4>A Muralha de Fogo</h4></div></div>
+                    <div class="card-landscape p-metaverso" data-movie="metaverso" role="button" tabindex="0" aria-label="Fuga do Metaverso"><div class="card-landscape-content"><h4>Fuga do Metaverso</h4></div></div>
+                    <div class="card-landscape p-iot" data-movie="iot" role="button" tabindex="0" aria-label="Rebelião das Torradeiras"><div class="card-landscape-content"><h4>Rebelião das Torradeiras</h4></div></div>
+                    <div class="card-landscape p-honeypot" data-movie="honeypot" role="button" tabindex="0" aria-label="O Pote de Mel"><div class="card-landscape-content"><h4>O Pote de Mel</h4></div></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TELA DE RESULTADOS DA PESQUISA -->
+        <div id="search-results">
+            <h2 class="row-title">Resultados da busca</h2>
+            <div class="search-grid" id="search-grid">
+                <!-- Cards injetados via JS -->
+            </div>
+        </div>
+
+        <!-- =========================================================
+             RODAPÉ AUTÊNTICO (ESTILO NETFLIX)
+             ========================================================= -->
+        <footer class="ifpiflix-footer">
+            <div class="footer-links">
+                <a href="#" role="button" data-action="resumo">Guia de Estudos (Resumo)</a>
+                <a href="#" role="button" onclick="event.preventDefault(); window.openAcervoScreen();">Trabalhos Antigos</a>
+                <a href="#" role="button" data-action="ajuda">Central de Ajuda</a>
+                <a href="#" role="button" data-action="conta">Conta</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 IFPIFLIX — Projeto Acadêmico de Filosofia, Grupo 6.
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- =======================================================
+         TELA: TRABALHOS ANTIGOS (DESIGN 100% AUTÊNTICO NETFLIX)
+         ======================================================= -->
+    <div id="acervo-screen" class="screen">
+        <nav class="home-nav scrolled">
+            <div class="nav-left-group">
+                <div class="nav-logo" onclick="window.filterNavCategory('inicio')">IFPIFLIX</div>
+                <ul class="nav-categories" id="acervo-nav-categories">
+                    <li class="nav-cat-item" data-cat="inicio" onclick="window.filterNavCategory('inicio')">Início</li>
+                    <li class="nav-cat-item" data-cat="top5" onclick="window.filterNavCategory('top5')">Em Alta</li>
+                    <li class="nav-cat-item" data-cat="filosofia" onclick="window.filterNavCategory('filosofia')">Filosofia</li>
+                    <li class="nav-cat-item" data-cat="ti" onclick="window.filterNavCategory('ti')">Séries de T.I.</li>
+                    <li class="nav-cat-item active" data-cat="trabalhos" onclick="window.filterNavCategory('trabalhos')">Trabalhos Antigos</li>
+                    <li class="nav-cat-item" data-cat="minha-lista" onclick="window.filterNavCategory('minha-lista')">Minha Lista</li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button type="button" class="btn-professor-upload" id="btn-acervo-upload" style="display: none;" onclick="window.openSubmitWorkModal()" title="Cadastrar / Enviar Trabalho da Turma (Exclusivo Professor)">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span class="btn-upload-text">Enviar Trabalho</span>
+                </button>
+                <div class="search-box">
+                    <button type="button" class="search-icon" aria-label="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="search" id="acervo-search-input" placeholder="Títulos, matérias..." oninput="window.renderAcervoScreen()" autocomplete="off">
+                </div>
+                <div class="nav-profile-wrapper">
+                    <button type="button" class="nav-profile-btn" onclick="window.switchScreen('profile-screen')">
+                        <i class="fa-solid fa-user-circle" style="font-size:1.5rem;"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- SUB-NAV ESTILO NETFLIX (TÍTULO DA SEÇÃO + SELETOR DE GÊNEROS/MATÉRIAS + FILTRO DE FORMATO) -->
+        <div class="netflix-subnav-bar">
+            <div class="netflix-subnav-left">
+                <h1 class="netflix-subnav-title">Trabalhos Antigos</h1>
+                <div class="netflix-genre-dropdown-wrapper">
+                    <button type="button" class="netflix-genre-select-btn" id="materia-dropdown-btn" onclick="window.toggleMateriaDropdown(event)">
+                        <span id="current-materia-label">Todas as Matérias</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </button>
+                    <div class="netflix-genre-popover" id="materia-dropdown-menu">
+                        <!-- Itens das matérias gerados via JS -->
+                    </div>
+                </div>
+
+                <!-- Pílulas de Filtro de Formato Estilo Streaming -->
+                <div class="acervo-format-pills">
+                    <button type="button" class="format-pill active" id="pill-format-all" onclick="window.setAcervoFormat('all')">Todos</button>
+                    <button type="button" class="format-pill" id="pill-format-pdf" onclick="window.setAcervoFormat('pdf')"><i class="fa-solid fa-file-powerpoint"></i> Slides / PDF</button>
+                    <button type="button" class="format-pill" id="pill-format-video" onclick="window.setAcervoFormat('video')"><i class="fa-solid fa-clapperboard"></i> Vídeos &amp; Podcasts</button>
+                </div>
+
+                <!-- Alternador de Modo: Coleções vs Todos os Slides -->
+                <div class="acervo-view-toggles" id="acervo-view-toggles">
+                    <button type="button" class="view-toggle-btn active" id="view-toggle-collections" onclick="window.setAcervoViewMode('collections')" title="Agrupado por seminários">
+                        <i class="fa-solid fa-folder-open"></i> Coleções
+                    </button>
+                    <button type="button" class="view-toggle-btn" id="view-toggle-grid" onclick="window.setAcervoViewMode('grid')" title="Grade com todos os slides 16:9">
+                        <i class="fa-solid fa-table-cells-large"></i> Todos os Slides
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chip de Aluno / Elenco Ativo -->
+            <div id="acervo-author-chip" class="acervo-author-chip" style="display: none;">
+                <span>Filtrado por: <strong id="acervo-author-name">Aluno</strong></span>
+                <button type="button" onclick="window.clearAcervoAuthorFilter()" title="Remover filtro de aluno"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <!-- CATÁLOGO DAS FILEIRAS EM PURO ESTILO NETFLIX -->
+        <div class="catalog-container acervo-catalog" id="acervo-rows-container">
+            <!-- Fileiras geradas via JS exatamente iguais à Home -->
+        </div>
+
+        <footer class="ifpiflix-footer">
+            <div class="footer-links">
+                <a href="#" role="button" data-action="resumo">Guia de Estudos (Resumo)</a>
+                <a href="#" role="button" data-action="ajuda">Central de Ajuda</a>
+                <a href="#" role="button" data-action="conta">Conta</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 IFPIFLIX — Projeto Acadêmico de Filosofia, Grupo 6.
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- TELA DE EPISÓDIOS (O GRIMÓRIO - MODO CLÁSSICO) -->
+    <div id="series-details-screen" class="screen">
+        <nav class="home-nav">
+            <div class="nav-logo" onclick="window.switchScreen('home-screen')">IFPIFLIX</div>
+            <button type="button" aria-label="Fechar" onclick="window.switchScreen('home-screen')" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </nav>
+        <div class="details-hero">
+            <div class="details-content">
+                <div style="color: var(--rpg-gold); font-weight: bold; letter-spacing: 2px; font-size: 0.85rem;">ARQUIVO HIST&Oacute;RICO &bull; APRESENTA&Ccedil;&Atilde;O EM SLIDES</div>
+                <h1>O GRIM&Oacute;RIO: MODO CL&Aacute;SSICO</h1>
+                <p style="color: #bbb; font-size: 1.15rem; margin-top: 8px; line-height: 1.5;">14 Slides com intera&ccedil;&otilde;es visuais completas, simula&ccedil;&otilde;es e mapa dos conceitos da Revolu&ccedil;&atilde;o Cient&iacute;fica.</p>
+                <button class="btn-play" onclick="window.startPresentationAt(0)" style="margin-top: 20px;"><i class="fa-solid fa-chalkboard-user"></i> Iniciar Apresenta&ccedil;&atilde;o Cl&aacute;ssica</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         PLAYER 1: APRESENTAÇÃO CLÁSSICA
+         ======================================================= -->
+    <div id="player-screen" class="screen">
+        <div class="player-header">
+            <button type="button" class="control-btn" aria-label="Voltar" onclick="window.switchScreen('series-details-screen')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div style="display:flex; flex-direction: column; margin-left: 10px;">
+                <span style="font-weight: bold;">A Ci&ecirc;ncia Moderna (Cl&aacute;ssico)</span>
+                <span id="player-ep-title" style="color: #aaa; font-size: 0.9rem;">T1:E1</span>
+            </div>
+        </div>
+
+        <div class="slide-area">
+            
+            <div class="slide" id="slide-0">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>01. A ESCOLÁSTICA E A AUTORIDADE</h2>
+                        <div class="ticker-box" id="ticker-0">Dogmas religiosos possuíam peso inquestionável.</div>
+                        <p>Entre os séculos XVI e XVII, a Europa viveu uma transição marcante. Durante a Idade Média, o conhecimento sobre a natureza era dominado pela Escolástica, corrente que unia a fé cristã à filosofia aristotélica. Nesse modelo medieval, as verdades cosmológicas não dependiam de testes práticos ou experiências, mas sim do princípio de autoridade, onde dogmas religiosos e textos clássicos possuíam um peso inquestionável.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-book-skull"></i> Regras Bloqueadas</div><div class="sim-screen"><i class="fa-solid fa-book" style="font-size:5rem; color:#aaa;"></i><h3 style="margin-top:30px; color:#E50914;">Status: Dogmatismo</h3></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-0_1">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>02. A TRANSIÇÃO RENASCENTISTA</h2>
+                        <div class="ticker-box" id="ticker-0_1">A física aristotélica era insuficiente para as novas necessidades.</div>
+                        <p>A chegada do Renascimento promoveu o resgate dos valores humanistas, colocando o ser humano e a razão no centro das investigações. Impulsionada por transformações socioeconômicas, pela expansão das rotas marítimas e pelo desenvolvimento da imprensa, a sociedade percebeu que a visão teocêntrica e a física aristotélica eram insuficientes para responder às novas necessidades práticas da época.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-map"></i> Exploração</div><div class="sim-screen"><div class="map-pan"></div><i class="fa-solid fa-sailboat" style="font-size:4rem; color:var(--rpg-gold); z-index:2; filter: drop-shadow(0 5px 10px #000);"></i></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-0_2">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>03. A RUPTURA COM A TRADIÇÃO</h2>
+                        <div class="ticker-box" id="ticker-0_2">A natureza como realidade observável.</div>
+                        <p>A crise do pensamento escolástico abriu caminho para o questionamento direto das certezas da Igreja e da Tradição. A natureza deixou de ser vista como um cosmos sagrado governado por causas metafísicas ou vontades divinas e passou a ser encarada como uma realidade observável, totalmente aberta ao estudo, à reflexão crítica e à investigação direta do ser humano.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-eye"></i> Investigação Ativa</div><div class="sim-screen"><div class="lantern-container"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-atom"></i><i class="fa-solid fa-microscope"></i><div class="lantern-mask"></div></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-1">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>04. O TERRENO FÉRTIL</h2>
+                        <div class="ticker-box" id="ticker-1">Dúvida, observação e busca por métodos autônomos.</div>
+                        <p>Essa transição histórica foi fundamental para o surgimento do pensamento científico moderno. Ao romper com o dogmatismo e com as amarras da tradição medieval, os pensadores da época estabeleceram uma nova atitude diante do saber: uma postura pautada na dúvida, na observação e na busca por métodos autônomos para compreender o universo.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-seedling"></i> A Semente da Ciência</div><div class="sim-screen"><i class="fa-solid fa-lightbulb" style="font-size:6rem; color:#f59e0b; animation: pulseLock 2s infinite alternate;"></i></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-2">
+    <div class="slide-grid">
+        <div class="text-col">
+            <h2>02. ANTES DA REVOLUÇÃO</h2>
+            <div class="ticker-box" id="ticker-2">A tradição ditava as regras.</div>
+            <h3 class="highlight">O Domínio do Passado</h3><p>As pessoas aprendiam sobre a natureza principalmente por meio da tradição e das ideias de pessoas consideradas importantes, como Aristóteles e autoridades da Igreja.</p>
+        </div>
+        <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-landmark-dome"></i> Paradigma Antigo</div><div class="sim-screen"><div class="geo-system"><i class="fa-solid fa-earth-americas geo-earth"></i><i class="fa-solid fa-lock geo-lock"></i></div></div></div>
+    </div>
+</div>
+
+<div class="slide" id="slide-2_1">
+    <div class="slide-grid">
+        <div class="text-col">
+            <h2>02. GEOCENTRISMO</h2>
+            <div class="ticker-box" id="ticker-2_1">A Terra no centro de tudo.</div>
+            <h3 class="highlight">O Universo Fechado</h3><p>Acreditava que a Terra estava parada no centro do Universo e que o Sol, a Lua e outros astros giravam ao redor da Terra.</p>
+        </div>
+        <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-globe"></i> Sistema Ptolomaico</div><div class="sim-screen"><div class="geo-system"><i class="fa-solid fa-earth-americas geo-earth"></i></div></div></div>
+    </div>
+</div>
+
+
+            <div class="slide" id="slide-3">
+    <div class="slide-grid">
+        <div class="text-col">
+            <h2>02. PRINCÍPIO DE AUTORIDADE</h2>
+            <div class="ticker-box" id="ticker-3">Aristóteles falou, tá falado.</div>
+            <h3 class="highlight">Verdade Inquestionável</h3><p>Uma ideia era considerada verdadeira porque uma pessoa importante dizia que era verdade. Não era necessário testar ou comprovar na prática.</p>
+        </div>
+        <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-book-skull"></i> Regras Bloqueadas</div><div class="sim-screen"><i class="fa-solid fa-book" style="font-size:5rem; color:#aaa;"></i><h3 style="margin-top:30px; color:#E50914;">Status: Dogmatismo</h3></div></div>
+    </div>
+</div>
+
+<div class="slide" id="slide-3_1">
+    <div class="slide-grid">
+        <div class="text-col">
+            <h2>02. A MUDANÇA</h2>
+            <div class="ticker-box" id="ticker-3_1">Observar e testar virou a nova moda.</div>
+            <h3 class="highlight">O Despertar</h3><p>A Revolução Científica mudou essa maneira de pensar. Os estudiosos começaram a valorizar mais a observação, a investigação e a experimentação.</p>
+        </div>
+        <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-eye"></i> Nova Visão</div><div class="sim-screen"><i class="fa-solid fa-microscope" style="font-size:5rem; color:#3b82f6;"></i></div></div>
+    </div>
+</div>
+
+            <div class="slide" id="slide-4">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>03. A GRANDE RUPTURA</h2>
+                        <div class="ticker-box" id="ticker-4">O homem moderno: 'E se a gente testasse essa parada?'</div>
+                        <h3 class="highlight">Da Contempla&ccedil;&atilde;o &agrave; A&ccedil;&atilde;o</h3><p>O ser humano parou de apenas "admirar" o mundo de forma passiva e passou a investigar ativamente como as coisas funcionam.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-lightbulb"></i> Lanterna da Razão</div><div class="sim-screen"><div class="lantern-container"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-atom"></i><i class="fa-solid fa-vial"></i><div class="lantern-mask"></div></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-5">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>04. REVOLU&Ccedil;&Atilde;O COSMOL&Oacute;GICA</h2>
+                        <div class="ticker-box" id="ticker-5">Copérnico: 'Galera, o Sol tá no meio, não a gente'.</div>
+                        <h3 class="highlight">O Heliocentrismo</h3><p>Copérnico muda o centro do tabuleiro! O Sol assume o centro do sistema e a Terra gira em volta dele.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-sun"></i> O Novo Centro</div><div class="sim-screen"><div class="helio-system"><i class="fa-solid fa-sun helio-sun"></i><i class="fa-solid fa-earth-americas helio-earth"></i></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-6">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>04. REVOLU&Ccedil;&Atilde;O COSMOL&Oacute;GICA</h2>
+                        <div class="ticker-box" id="ticker-6">Galileu: 'Mano, olha no telescópio'. Inquisição: 'Não quero'.</div>
+                        <h3 class="highlight">Galileu Galilei</h3><p>Utilizando o telesc&oacute;pio para comprovar a teoria, ele afirmou: <em>"A natureza est&aacute; escrita em caracteres matem&aacute;ticos"</em>.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-binoculars"></i> Visão Aprimorada</div><div class="sim-screen"><div class="sky-bg"></div><div class="telescope-lens"><i class="fa-solid fa-star" style="font-size:2rem; color:#fff;"></i></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-6_1">
+    <div class="slide-grid">
+        <div class="text-col">
+            <h2>04. REVOLUÇÃO COSMOLÓGICA</h2>
+            <div class="ticker-box" id="ticker-6_1">Kepler: “Círculo perfeito? Não exatamente.”</div>
+            <h3 class="highlight">Órbitas Elípticas</h3><p>Ao analisar o movimento dos planetas, Kepler descobriu que suas órbitas ao redor do Sol são elípticas, aperfeiçoando o modelo heliocêntrico.</p>
+        </div>
+        <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-meteor"></i> Leis de Kepler</div><div class="sim-screen"><div class="helio-system" style="border-radius: 50% / 30%;"><i class="fa-solid fa-sun helio-sun"></i><i class="fa-solid fa-earth-americas helio-earth"></i></div></div></div>
+    </div>
+</div>
+
+            
+
+            <div class="slide" id="slide-8">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>05. O EMPIRISMO</h2>
+                        <div class="ticker-box" id="ticker-8">Ídolo da Caverna = viver na própria bolha.</div>
+                        <h3 class="highlight">A Queda dos Ídolos</h3><p>Francis Bacon criticou os "Ídolos": falsos preconceitos que cegam a mente. É preciso limpar a mente antes de investigar.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-hammer"></i> Quebrando Ilusões</div><div class="sim-screen"><div class="idol-container"><i class="fa-solid fa-user-shield idol-half idol-left"></i><i class="fa-solid fa-user-shield idol-half idol-right"></i><div class="idol-glow"></div></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-9">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>05. O EMPIRISMO</h2>
+                        <div class="ticker-box" id="ticker-9">Se não testou na prática, meu anjo, é só fanfic.</div>
+                        <h3 class="highlight">O Método Indutivo</h3><p>A ci&ecirc;ncia deve partir da observa&ccedil;&atilde;o e de experimentos repetidos. Não basta achar, é preciso testar na prática!</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-flask"></i> Laboratório Empírico</div><div class="sim-screen"><div class="potion-lab"><div class="flask-neck"></div><div class="flask-body"><div class="liquid"></div><div class="liquid2"></div><div class="potion-bubbles b1"></div><div class="potion-bubbles b2"></div><div class="potion-bubbles b3"></div></div></div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-10">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>06. O RACIONALISMO</h2>
+                        <div class="ticker-box" id="ticker-10">Descartes ficou dias trancado num quarto.</div>
+                        <h3 class="highlight">A Dúvida Metódica</h3><p>Descartes utiliza a <strong>D&uacute;vida Met&oacute;dica</strong> para duvidar de tudo que não for absolutamente claro e evidente.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-bug"></i> Desconstrução</div><div class="sim-screen"><div class="doubt-glitch">DUVIDE</div></div></div>
+                </div>
+            </div>
+
+            <div class="slide" id="slide-11">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>06. O RACIONALISMO</h2>
+                        <div class="ticker-box" id="ticker-11">A única certeza: eu existo porque penso.</div>
+                        <h3 class="highlight">Penso, logo existo</h3><p>A raz&atilde;o l&oacute;gica e a matemática se tornam a base inquebr&aacute;vel para o pensamento cient&iacute;fico moderno.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-brain"></i> A Forja da Mente</div><div class="sim-screen"><i class="fa-solid fa-brain brain-gear"></i></div></div>
+                </div>
+            </div>
+
+
+            <div class="slide" id="slide-12">
+                <div class="slide-grid">
+                    <div class="text-col">
+                        <h2>07. A S&Iacute;NTESE NEWTONIANA</h2>
+                        <div class="ticker-box" id="ticker-12">Uma maçã caiu, e o cara inventou o cálculo.</div>
+                        <h3 class="highlight">O Método Científico</h3><p>Newton consolida a revolução. Racionalismo e Empirismo se unem para formar o <strong>Método Hipotético-Dedutivo</strong>.</p>
+                    </div>
+                    <div class="visual-col"><div class="rpg-top"><i class="fa-solid fa-trophy"></i> Fim da Campanha</div><div class="sim-screen"><div class="newton-scene"><i class="fa-solid fa-apple-whole newton-apple"></i><div class="math-wave">F = G(m1m2)/r²</div></div></div></div>
+                </div>
+            </div>
+
+            <!-- SLIDE 13: PROPAGANDA -->
+            <div class="slide" id="slide-13">
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; width: 100%; z-index: 50;">
+                    <h1 style="font-family:'Bebas Neue'; font-size:7rem; color:var(--netflix-red); text-shadow: 0 0 30px rgba(229,9,20,0.8); margin-bottom:10px;">ASSINE O IFPIFLIX</h1>
+                    <p style="font-size:2rem; color:#fff;">Acesso ilimitado à sabedoria universal.</p>
+                    <div style="background: linear-gradient(135deg, #E50914, #8b0000); padding: 20px 50px; border-radius: 8px; font-size: 3rem; font-weight: bold; margin-top: 30px; box-shadow: 0 10px 30px rgba(229,9,20,0.5);">
+                        POR APENAS R$ 67,90 <span style="font-size: 1.5rem; font-weight: normal;">/ mês</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="player-controls">
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+            <div class="nav-buttons">
+                <button type="button" class="control-btn" id="btn-prev-slide" aria-label="Slide anterior"><i class="fa-solid fa-backward-step"></i></button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: #fff; color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; cursor: pointer;" onclick="window.switchScreen('profile-screen')">🗣 <span id="current-presenter-name">Davi</span></span>
+                    <button type="button" class="player-scenes-btn" onclick="window.toggleScenesDrawer(true)" aria-label="Ver lista de cenas"><i class="fa-solid fa-layer-group"></i> Cenas</button>
+                </div>
+                <button type="button" class="control-btn" id="btn-next-slide" aria-label="Próximo slide"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         PLAYER 2: MODO CINEMATOGRÁFICO 3D
+         ======================================================= -->
+    <div id="cinematic-stage" class="screen">
+        <!-- Luz Dinâmica Seguindo Cursor -->
+        <div class="dynamic-light" id="dynamic-light"></div>
+
+        <!-- Partículas de Espaço -->
+        <div class="space-particles" id="space-particles"></div>
+
+        <div class="stage-header">
+            <button class="control-btn" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; z-index: 1000;" onclick="window.switchScreen('home-screen')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div style="display:flex; flex-direction: column; margin-left: 10px;">
+                <span style="font-weight: bold;">Guerra Civil: O Filme 3D</span>
+                <span id="cine-ep-title" style="color: #aaa; font-size: 0.9rem;">Cena 1</span>
+            </div>
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 8px; z-index: 1000;">
+                <button type="button" class="player-scenes-btn" onclick="window.toggleScenesDrawer(true)" aria-label="Ver lista de cenas"><i class="fa-solid fa-layer-group"></i> Cenas</button>
+                <span style="background: #fff; color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🗣 <span id="cine-presenter-name">Davi</span></span>
+            </div>
+        </div>
+
+        <!-- HUD EPISTEMOLÓGICO FLUTUANTE -->
+        <div id="epistemic-hud">
+            <div class="hud-header">
+                <i class="fa-solid fa-brain"></i>
+                <div>
+                    <div class="hud-epoch-label">Paradigma Atual</div>
+                    <div class="hud-epoch-value" id="hud-epoch-value">INICIALIZANDO...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRAS CINEMÁTICAS (Ficam soltas dentro do #cinematic-stage) -->
+<div class="cine-letterbox top"></div>
+<div class="cine-letterbox bottom"></div>
+
+<!-- ==========================================
+     CAPÍTULO 1: O RENASCIMENTO (NOVO DESIGN)
+     ========================================== -->
+<!-- TÓPICO 1: O RENASCIMENTO (EXPANDIDO E CINEMATOGRÁFICO) -->
+        <div id="cine-renaissance" class="cine-scene">
+            
+            <!-- CONTÊINER VISUAL (METADE ESQUERDA) -->
+            <div class="cine-visual-area">
+                
+                <!-- Vis 0: A Escolástica (Biblioteca Obscura) -->
+                <div class="cine-vis-layer vis-0-library">
+                    <div class="dust-particles"></div>
+                    <i class="fa-solid fa-book-skull floating-book b1"></i>
+                    <i class="fa-solid fa-book-quran floating-book b2"></i>
+                    <i class="fa-solid fa-book-journal-whills floating-book b3"></i>
+                    <div class="candle-glow"></div>
+                </div>
+
+                <!-- Vis 0_1: A Transição (Mapa Iluminado) -->
+                <div class="cine-vis-layer vis-0_1-map">
+                    <div class="map-grid-golden"></div>
+                    <svg class="map-route" viewBox="0 0 500 500">
+                        <path d="M50,450 Q200,200 450,50" fill="transparent" stroke="var(--rpg-gold)" stroke-width="4" stroke-dasharray="1000" stroke-dashoffset="1000" stroke-linecap="round"/>
+                    </svg>
+                    <i class="fa-solid fa-sailboat map-ship"></i>
+                </div>
+
+                <!-- Vis 0_2: A Ruptura (Cortina se Rasgando) -->
+                <div class="cine-vis-layer vis-0_2-rupture">
+                    <div class="rupture-stars"></div>
+                    <div class="rupture-light"></div>
+                    <div class="dark-curtain curtain-left"></div>
+                    <div class="dark-curtain curtain-right"></div>
+                </div>
+
+                <!-- Vis 1: O Terreno Fértil (Partículas Humanistas) -->
+                <div class="cine-vis-layer vis-1-fertile">
+                    <i class="fa-solid fa-seedling fertile-core"></i>
+                    <div class="fertile-sparks">
+                        <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div>
+                        <div class="spark s4"></div><div class="spark s5"></div><div class="spark s6"></div>
+                        <div class="spark s7"></div><div class="spark s8"></div><div class="spark s9"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CAIXAS DE TEXTO (ALINHADAS À DIREITA) -->
+            <div class="cine-text-box cine-txt-0">
+                <h2 class="cine-title">01. A ESCOLÁSTICA</h2>
+                <p class="cine-desc">O conhecimento sobre a natureza era dominado pela Escolástica. As verdades não dependiam de testes práticos, mas sim do princípio de autoridade, onde dogmas e textos clássicos possuíam um peso inquestionável.</p>
+            </div>
+            
+            <div class="cine-text-box cine-txt-0_1">
+                <h2 class="cine-title">02. A TRANSIÇÃO</h2>
+                <p class="cine-desc">O Renascimento promoveu o resgate humanista. Impulsionada por transformações e navegações, a sociedade percebeu que a visão teocêntrica e a física aristotélica eram insuficientes.</p>
+            </div>
+            
+            <div class="cine-text-box cine-txt-0_2">
+                <h2 class="cine-title">03. A RUPTURA</h2>
+                <p class="cine-desc">A crise abriu caminho para o questionamento direto. A natureza deixou de ser vista como um cosmos sagrado governado por causas metafísicas e passou a ser encarada como uma realidade observável.</p>
+            </div>
+
+            <div class="cine-text-box cine-txt-1">
+                <h2 class="cine-title">04. O TERRENO FÉRTIL</h2>
+                <p class="cine-desc">Ao romper com as amarras da tradição medieval, os pensadores estabeleceram uma nova atitude diante do saber: uma postura pautada na dúvida e na busca por métodos autônomos.</p>
+            </div>
+        </div>
+
+
+<!-- TÓPICO 2: ANTES DA REVOLUÇÃO (BIBLIOTECA & DOGMA) -->
+        <div id="cine-library" class="cine-scene">
+            
+            <div class="cine-visual-area">
+                
+                <!-- Vis 2: A Tradição (Corredor de Mármore e Estagnação) -->
+                <div class="cine-vis-layer vis-2-tradition">
+                    <div class="marble-hall"></div>
+                    <i class="fa-solid fa-landmark giant-monument"></i>
+                    <div class="stagnant-dust"></div>
+                </div>
+
+                <!-- Vis 2_1: Geocentrismo (Esferas de Cristal) - MANTIDO -->
+                <div class="cine-vis-layer vis-2_1-geocentrism">
+                    <div class="geo-universe-bg"></div>
+                    <i class="fa-solid fa-earth-europe geo-center-earth"></i>
+                    <i class="fa-solid fa-lock geo-lock-icon"></i>
+                    <div class="crystal-sphere sphere-1"><i class="fa-solid fa-moon orbit-moon"></i></div>
+                    <div class="crystal-sphere sphere-2"><i class="fa-solid fa-sun orbit-sun"></i></div>
+                    <div class="crystal-sphere sphere-3"><div class="orbit-stars"></div></div>
+                </div>
+
+                <!-- Vis 3: Princípio de Autoridade (O Veredicto Violento) -->
+                <div class="cine-vis-layer vis-3-authority">
+                    <div class="authority-bg"></div>
+                    <div class="impact-sparks">
+                        <div class="ispark i1"></div><div class="ispark i2"></div><div class="ispark i3"></div>
+                        <div class="ispark i4"></div><div class="ispark i5"></div><div class="ispark i6"></div>
+                    </div>
+                    <i class="fa-solid fa-gavel giant-gavel"></i>
+                    <div class="dogma-seal">A PALAVRA<br>FINAL</div>
+                </div>
+
+                <!-- Vis 3_1: A Mudança (O Microscópio e a Vida) -->
+                <div class="cine-vis-layer vis-3_1-change">
+                    <div class="change-bg"></div>
+                    <i class="fa-solid fa-microscope giant-microscope"></i>
+                    <!-- Cone de luz corrigido -->
+                    <div class="lens-beam"></div>
+                    
+                    <div class="bio-particles">
+                        <div class="cell c1"></div><div class="cell c2"></div><div class="cell c3"></div>
+                        <div class="cell c4"></div><div class="cell c5"></div><div class="cell c6"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CAIXAS DE TEXTO -->
+            <div class="cine-text-box cine-txt-2">
+                <h2 class="cine-title">02. ANTES DA REVOLUÇÃO</h2>
+                <p class="cine-desc">As pessoas aprendiam sobre a natureza principalmente por meio da tradição e das ideias de pessoas consideradas importantes, como Aristóteles e autoridades da Igreja.</p>
+            </div>
+            <div class="cine-text-box cine-txt-2_1">
+                <h2 class="cine-title">02. GEOCENTRISMO</h2>
+                <p class="cine-desc">Acreditava que a Terra estava parada no centro do Universo e que o Sol, a Lua e outros astros giravam ao redor da Terra.</p>
+            </div>
+            <div class="cine-text-box cine-txt-3">
+                <h2 class="cine-title">02. PRINCÍPIO DE AUTORIDADE</h2>
+                <p class="cine-desc">Uma ideia era considerada verdadeira porque uma pessoa importante dizia que era verdade. Não era necessário testar ou comprovar na prática.</p>
+            </div>
+            <div class="cine-text-box cine-txt-3_1">
+                <h2 class="cine-title">02. A MUDANÇA</h2>
+                <p class="cine-desc">A Revolução Científica mudou essa maneira de pensar. Os estudiosos começaram a valorizar mais a observação, a investigação e a experimentação.</p>
+            </div>
+        </div>
+
+<!-- TÓPICO 3: A GRANDE RUPTURA (TELA CHEIA) -->
+        <div id="cine-rupture" class="cine-scene">
+            
+            <!-- CONTÊINER VISUAL (100% DA TELA) -->
+            <div class="vis-4-full-screen">
+                
+                <!-- ESTADO 1: A Contemplação Passiva -->
+                <div class="rupture-passive">
+                    <i class="fa-solid fa-eye passive-giant-eye"></i>
+                    <div class="passive-dust"></div>
+                </div>
+
+                <!-- ESTADO 2: A Investigação Ativa (O Método) -->
+                <div class="rupture-active">
+                    <!-- O chão de cartografia/medição -->
+                    <div class="active-blueprint-grid"></div>
+                    
+                    <!-- Os novos instrumentos (Gears, Relógios, Bússolas) -->
+                    <i class="fa-solid fa-gear instrument-gear-bg"></i>
+                    <i class="fa-solid fa-gear instrument-gear-sm"></i>
+                    
+                    <!-- Ferramenta de interrogatório central -->
+                    <div class="active-centerpiece">
+                        <i class="fa-solid fa-compass main-compass"></i>
+                        <div class="scanning-laser"></div>
+                    </div>
+                </div>
+
+                <!-- O Clarão de Transição -->
+                <div class="rupture-flash"></div>
+            </div>
+
+            <!-- CAIXA DE TEXTO (CENTRALIZADA NA PARTE INFERIOR) -->
+            <div class="cine-text-box cine-txt-4">
+                <h2 class="cine-title">03. A GRANDE RUPTURA</h2>
+                <div class="cine-ticker" id="cine-ticker-4">O homem moderno: 'E se a gente testasse essa parada?'</div>
+                <p class="cine-desc">O ser humano parou de apenas "admirar" o mundo de forma passiva e passou a investigar ativamente como as coisas funcionam.</p>
+            </div>
+            
+        </div>
+
+<!-- TÓPICO 4: REVOLUÇÃO COSMOLÓGICA (TELA CHEIA FLUIDA) -->
+        <div id="cine-space" class="cine-scene">
+            
+            <!-- Vazio do Espaço Profundo -->
+            <div class="cosmos-bg"></div>
+
+            <!-- O SISTEMA SOLAR DINÂMICO -->
+            <div class="solar-system-container">
+                <!-- O Sol -->
+                <div class="the-sun">
+                    <div class="sun-flare"></div>
+                </div>
+
+                <!-- Órbita da Terra -->
+                <div class="orbit-path earth-orbit">
+                    <div class="planet-earth">
+                        <!-- Órbita da Lua ao redor da Terra -->
+                        <div class="moon-orbit">
+                            <div class="the-moon"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Órbita de Marte -->
+                <div class="orbit-path mars-orbit">
+                    <div class="planet-mars"></div>
+                </div>
+                
+                <!-- Carimbo da Inquisição (Easter Egg do Slide 6) -->
+                <div class="inquisition-stamp">CENSURADO<br>PELA INQUISIÇÃO</div>
+            </div>
+
+            <!-- CAIXAS DE TEXTO (ALINHADAS À DIREITA) -->
+            <div class="cine-text-box cine-txt-5">
+                <h2 class="cine-title">04. REV. COSMOLÓGICA</h2>
+                <div class="cine-ticker" id="cine-ticker-5">Copérnico: 'Galera, o Sol tá no meio, não a gente'.</div>
+                <p class="cine-desc">Copérnico muda o centro do tabuleiro! O Sol assume o centro do sistema e a Terra gira em volta dele.</p>
+            </div>
+            
+            <div class="cine-text-box cine-txt-6">
+                <h2 class="cine-title">04. REV. COSMOLÓGICA</h2>
+                <div class="cine-ticker" id="cine-ticker-6">Galileu: 'Mano, olha no telescópio'. Inquisição: 'Não quero'.</div>
+                <p class="cine-desc">Utilizando o telescópio para comprovar a teoria, Galileu afirmou: "A natureza está escrita em caracteres matemáticos".</p>
+            </div>
+
+            <div class="cine-text-box cine-txt-6_1">
+                <h2 class="cine-title">04. REV. COSMOLÓGICA</h2>
+                <div class="cine-ticker" id="cine-ticker-6_1">Kepler: “Círculo perfeito? Não exatamente.”</div>
+                <p class="cine-desc">Ao analisar o movimento dos planetas, Kepler descobriu que suas órbitas ao redor do Sol são elípticas, aperfeiçoando o modelo heliocêntrico.</p>
+            </div>
+        </div>
+
+<!-- TÓPICO 5 E 6: A BANCADA DOS MÉTODOS (PLANO SEQUÊNCIA) -->
+        <div id="cine-desk" class="cine-scene">
+            
+            <!-- O Chão da Bancada em Perspectiva 3D -->
+            <div class="cine-surface"></div>
+            
+            <!-- O Trilho da Câmera (Desliza para a direita no Cap 6) -->
+            <div class="cine-pan">
+                
+                <!-- ==========================================
+                     LADO ESQUERDO: EMPIRISMO (BACON)
+                     ========================================== -->
+                <div class="cine-side empiricism-side">
+                    
+                    <!-- Vis 8: A Queda dos Ídolos -->
+                    <div class="cine-vis-layer vis-8-idols">
+                        <div class="heavy-fog"></div>
+                        <div class="stone-idol-container">
+                            <i class="fa-solid fa-mask idol-half mask-left"></i>
+                            <i class="fa-solid fa-mask idol-half mask-right"></i>
+                            <div class="idol-crack-light"></div>
+                        </div>
+                    </div>
+
+                    <!-- Vis 9: O Laboratório Indutivo -->
+                    <div class="cine-vis-layer vis-9-lab">
+                        <div class="neon-flask-container">
+                            <i class="fa-solid fa-flask flask-glass"></i>
+                            <div class="flask-glow"></div>
+                            <div class="flask-bubbles">
+                                <div class="fbubble fb1"></div><div class="fbubble fb2"></div><div class="fbubble fb3"></div>
+                                <div class="fbubble fb4"></div><div class="fbubble fb5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Textos Empirismo -->
+                    <div class="cine-text-box cine-txt-8">
+                        <h2 class="cine-title">05. O EMPIRISMO</h2>
+                        <div class="cine-ticker" id="cine-ticker-8">Ídolo da Caverna = viver na própria bolha.</div>
+                        <p class="cine-desc">Bacon criticou os "Ídolos": falsos preconceitos que cegam a mente. É preciso limpar a mente antes de investigar a verdade material.</p>
+                    </div>
+                    <div class="cine-text-box cine-txt-9">
+                        <h2 class="cine-title">05. MÉTODO INDUTIVO</h2>
+                        <div class="cine-ticker" id="cine-ticker-9">Se não testou na prática, meu anjo, é só fanfic.</div>
+                        <p class="cine-desc">A ciência deve partir da observação e de experimentos repetidos. Não basta deduzir as coisas na teoria, é preciso testar na prática!</p>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     LADO DIREITO: RACIONALISMO (DESCARTES)
+                     ========================================== -->
+                <div class="cine-side rationalism-side">
+                    
+                    <!-- Vis 10: Dúvida Metódica (O Glitch na Matrix) -->
+                    <div class="cine-vis-layer vis-10-doubt">
+                        <div class="matrix-grid"></div>
+                        <div class="glitch-container">
+                            <i class="fa-solid fa-cube logic-cube"></i>
+                            <div class="system-error">DÚVIDA METÓDICA</div>
+                        </div>
+                    </div>
+
+                    <!-- Vis 11: Penso, Logo Existo (O Cérebro) -->
+                    <div class="cine-vis-layer vis-11-cogito">
+                        <!-- Fórmulas flutuando no fundo -->
+                        <div class="math-formulas">y = mx + b &nbsp;&nbsp; f(x) = x² &nbsp;&nbsp; a² + b² = c²</div>
+                        <i class="fa-solid fa-gear gear-bg gear-1"></i>
+                        <i class="fa-solid fa-gear gear-bg gear-2"></i>
+                        <i class="fa-solid fa-brain glowing-brain"></i>
+                    </div>
+                    
+                    <!-- Textos Racionalismo -->
+                    <div class="cine-text-box cine-txt-10">
+                        <h2 class="cine-title">06. O RACIONALISMO</h2>
+                        <div class="cine-ticker" id="cine-ticker-10">Descartes ficou dias trancado num quarto.</div>
+                        <p class="cine-desc">Descartes utiliza a Dúvida Metódica para duvidar de tudo que os sentidos mostram, aceitando apenas o que for absolutamente lógico.</p>
+                    </div>
+                    <div class="cine-text-box cine-txt-11">
+                        <h2 class="cine-title">06. PENSO, LOGO EXISTO</h2>
+                        <div class="cine-ticker" id="cine-ticker-11">A única certeza: eu existo porque penso.</div>
+                        <p class="cine-desc">A razão lógica e a matemática formam a base inquebrável para o pensamento. O corpo engana, mas a mente deduz a verdade.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+<!-- ==========================================
+     CAPÍTULO 12: A SÍNTESE (A MAÇÃ)
+     ========================================== -->
+<div id="cine-apple" class="cine-scene">
+    <div class="cine-camera" style="width: 100%; height: 100%;">
+        
+        <!-- AURA E OBJETO -->
+        <div class="cine-aura aura-gravity"></div>
+        <div class="cine-prop prop-apple" style="left: 25%;">
+            <!-- A Onda Matemática explodindo atrás da Maçã -->
+            <div class="cine-math-wave" style="font-size: 8rem; position: absolute; z-index: 1;">F = G(m1m2)/r²</div>
+            <i class="fa-solid fa-apple-whole" style="font-size: 16rem; color: #E50914; filter: drop-shadow(0 20px 30px #000); position: relative; z-index: 5;"></i>
+        </div>
+
+        <!-- TEXTO (Na Direita) -->
+        <div class="cine-text-box cine-txt-12" style="left: 55vw; top: 50%; transform: translateY(-50%) translateZ(100px);">
+            <h2 class="cine-title" style="color: #E50914;">07. A SÍNTESE NEWTONIANA</h2>
+            <div class="cine-ticker" id="cine-ticker-12" style="border-color: #E50914; background: rgba(229,9,20,0.1);">Uma maçã caiu, e o cara inventou o cálculo.</div>
+            <p class="cine-desc">Newton consolida a revolução. O Racionalismo (Matemática) e o Empirismo (Observação Física) se unem para formar o <strong>Método Hipotético-Dedutivo</strong>.</p>
+        </div>
+        
+    </div>
+</div>
+
+<!-- ==========================================
+     CAPÍTULO 13: PROPAGANDA FINAL
+     ========================================== -->
+<div id="cine-ad" class="cine-scene">
+    <div class="cine-camera" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; background: #000;">
+        <h1 style="font-family:'Bebas Neue'; font-size:8rem; color:var(--netflix-red); text-shadow: 0 0 50px rgba(229,9,20,0.8); margin-bottom:10px;">ASSINE O IFPIFLIX</h1>
+        <p style="font-size:2.5rem; color:#fff; margin-bottom: 40px;">Acesso ilimitado à sabedoria universal.</p>
+        <div style="background: linear-gradient(135deg, #E50914, #8b0000); padding: 20px 60px; border-radius: 8px; font-size: 3.5rem; font-weight: bold; box-shadow: 0 10px 40px rgba(229,9,20,0.6);">
+            R$ 67,90 <span style="font-size: 1.8rem; font-weight: normal;">/ mês</span>
+        </div>
+    </div>
+</div>
+
+        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: rgba(255,255,255,0.2); z-index: 900;"><div id="cine-progress" style="height: 100%; background: var(--netflix-red); width: 0%; transition: width 0.3s ease-out;"></div></div>
+    </div>
+
+    <!-- OVERLAYS GLOBAIS DE EVENTOS -->
+    <div id="idle-overlay">
+        <h2 style="font-size: 2.5rem; color: #fff; font-weight: normal;">Tem algu&eacute;m assistindo?</h2>
+        <button class="btn-idle" id="btn-resume-idle">Continuar Assistindo</button>
+    </div>
+
+
+    <div id="credits-screen" class="screen">
+        <div style="max-width: 600px; text-align: center;">
+            <div style="font-family: 'Bebas Neue'; font-size: 5rem; color: var(--netflix-red); letter-spacing: 3px;">IFPIFLIX</div>
+            <h2 style="font-size: 2rem; margin-bottom: 10px;">Fim da Apresenta&ccedil;&atilde;o</h2>
+            <p style="color: #888; font-size: 1.1rem;">Filosofia: A Ciência Moderna &mdash; Grupo 6</p>
+            <button class="btn-play" onclick="window.switchScreen('home-screen')" style="margin-top: 20px;">Voltar ao Início</button>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         MODAL DE DETALHES (SUBMENU)
+         ======================================================= -->
+    <div id="title-modal-overlay" onclick="window.closeTitleModal(event)">
+        <div class="title-modal-container" id="title-modal-content">
+            <button type="button" class="modal-close-btn" aria-label="Fechar" onclick="window.closeTitleModal(event, true)"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="modal-hero" id="m-hero">
+
+                <video id="m-trailer-video" loop muted playsinline preload="none"></video>
+                <iframe id="m-trailer-iframe" allow="autoplay; encrypted-media" tabindex="-1"></iframe>
+
+                <div class="modal-hero-gradient"></div>
+                <div class="modal-hero-content">
+                    <div id="m-surprise-badge" class="modal-surprise-badge" style="display:none;">
+                        <i class="fa-solid fa-dice"></i> <span>Sorteado pelo Surpreenda-me</span>
+                        <button type="button" class="btn-respin" onclick="window.triggerSurpriseMe()"><i class="fa-solid fa-rotate-right"></i> Sortear Outro</button>
+                    </div>
+                    <h1 class="modal-title" id="m-title">Guerra Civil</h1>
+                    <div class="modal-controls">
+                        <div class="modal-action-btns" id="m-action-btns">
+                            <button class="modal-btn-play" id="m-btn-play"><i class="fa-solid fa-play"></i> Assistir Filme 3D</button>
+                            <button class="modal-btn-secondary" id="m-btn-secondary" style="display:none;"><i class="fa-solid fa-clapperboard"></i> Assistir Trailer</button>
+                        </div>
+                        <div class="modal-icon-btns">
+                            <button type="button" class="modal-btn-icon" id="m-btn-list" aria-label="Adicionar à Minha Lista" title="Minha Lista" onclick="window.toggleMinhaLista()"><i class="fa-solid fa-plus"></i></button>
+                            
+                            <!-- Botão de Avaliação (Estilo Netflix) -->
+                            <div class="rate-btn-wrapper" id="rate-btn-wrapper">
+                                <button type="button" class="modal-btn-icon" id="m-btn-rate" aria-label="Avaliar título" title="Classificar" onclick="window.toggleRatePopover(event)">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                </button>
+                                <div class="rate-popover" id="rate-popover" onclick="event.stopPropagation()">
+                                    <button type="button" class="rate-option" data-rate="dislike" title="Não é para mim" onclick="window.setRating('dislike')"><i class="fa-regular fa-thumbs-down"></i></button>
+                                    <button type="button" class="rate-option" data-rate="like" title="Gostei" onclick="window.setRating('like')"><i class="fa-regular fa-thumbs-up"></i></button>
+                                    <button type="button" class="rate-option" data-rate="love" title="Amei!" onclick="window.setRating('love')"><i class="fa-solid fa-fire"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Botão Compartilhar Título -->
+                            <button type="button" class="modal-btn-icon" id="m-btn-share" aria-label="Compartilhar título" title="Compartilhar" onclick="window.shareCurrentMovie()"><i class="fa-solid fa-share-nodes"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controles Flutuantes do Trailer no Banner -->
+                <div class="modal-trailer-floating-controls" id="m-trailer-controls">
+                    <button type="button" class="trailer-control-btn" id="m-btn-sound" aria-label="Ativar ou desativar áudio" title="Ativar áudio" onclick="window.toggleModalTrailerSound(event)">
+                        <i class="fa-solid fa-volume-xmark"></i>
+                    </button>
+                    <button type="button" class="trailer-control-btn" id="m-btn-expand-trailer" aria-label="Expandir ou recolher trailer" title="Expandir trailer" onclick="window.toggleModalTrailerExpand(event)">
+                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                    </button>
+                    <button type="button" class="trailer-control-btn" id="m-btn-toggle-info" aria-label="Ocultar ou exibir textos" title="Ocultar textos na frente" onclick="window.toggleModalTrailerInfo(event)">
+                        <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-info-grid">
+                <div>
+                    <div class="modal-meta">
+                        <span class="meta-match" id="m-match">98% Relevante</span>
+                        <span id="m-year">2026</span>
+                        <span class="meta-age" id="m-age">14</span>
+                        <span id="m-duration">1h 25m</span>
+                    </div>
+                    <p class="modal-synopsis" id="m-synopsis">Sinopse do filme vai aqui.</p>
+                </div>
+                <div>
+                    <div class="modal-cast"><span>Elenco:</span> <span id="m-cast">Davi, Maria Helena, Francisco L...</span></div>
+                    <div class="modal-cast"><span>Gêneros:</span> <span id="m-genres">Filosofia, Documentário</span></div>
+                    <div class="modal-cast"><span>Temas:</span> <span id="m-tags">Renascimento, Método Científico</span></div>
+                </div>
+            </div>
+            
+            <div class="modal-more-like">
+                <h3 id="m-bottom-title">Recomendações da Turma</h3>
+                <div class="more-grid" id="m-recommendations">
+                    <!-- Cards gerados via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         HOVER PREVIEW CARD (MINI TELA FLUTUANTE)
+         ======================================================= -->
+    <div id="hover-preview-card" onmouseleave="window.closeHoverPreview()">
+        <div class="hpc-video-wrapper">
+            <img id="hpc-img" src="" alt="">
+            <video id="hpc-video" muted loop playsinline></video>
+            <iframe id="hpc-iframe" allow="autoplay; encrypted-media" tabindex="-1"></iframe>
+            <div class="hpc-gradient"></div>
+            <h4 id="hpc-title">Título</h4>
+        </div>
+        <div class="hpc-details">
+            <div class="hpc-controls">
+                <button type="button" class="hpc-btn play" id="hpc-btn-play" aria-label="Assistir"><i class="fa-solid fa-play"></i></button>
+                <button type="button" class="hpc-btn icon" id="hpc-btn-list" aria-label="Minha Lista"><i class="fa-solid fa-plus"></i></button>
+                <button type="button" class="hpc-btn icon expand" id="hpc-btn-expand" aria-label="Mais informações"><i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            <div class="hpc-meta">
+                <span class="meta-match" id="hpc-match">98% Relevante</span>
+                <span class="meta-age" id="hpc-age">14</span>
+                <span id="hpc-duration">1h 25m</span>
+            </div>
+            <div class="hpc-tags" id="hpc-tags">Filosofia &bull; Documentário</div>
+        </div>
+    </div>
+
+    <script src="js/script.js?v=3.8"></script>
+
+    <!-- O HTML DO PLAYER DEVE FICAR FORA DO SCRIPT -->
+    <div id="custom-video-player" class="video-overlay">
+        <button class="close-video-btn" onclick="window.closeVideoPlayer()">    
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <video id="main-video-element" controls playsinline preload="auto"></video>
+        <iframe id="main-iframe-element" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="display:none; width: 100%; height: 100%; border: none;"></iframe>
+
+        <!-- Controles Customizados IFPIFLIX para Trailer do YouTube -->
+        <div class="custom-yt-controls-overlay" id="custom-yt-controls">
+            <div class="ytc-progress-bar" id="ytc-progress" onclick="window.ytMainSeek(event)">
+                <div class="ytc-progress-fill" id="ytc-fill"></div>
+            </div>
+            <div class="ytc-buttons-row">
+                <div class="ytc-left">
+                    <button type="button" class="ytc-btn" id="ytc-play" aria-label="Reproduzir ou pausar" onclick="window.ytMainTogglePlay(event)"><i class="fa-solid fa-play"></i></button>
+                    <button type="button" class="ytc-btn" id="ytc-mute" aria-label="Ativar ou desativar áudio" onclick="window.ytMainToggleMute(event)"><i class="fa-solid fa-volume-high"></i></button>
+                    <span class="ytc-time" id="ytc-time">0:00 / 0:00</span>
+                </div>
+                <div class="ytc-right">
+                    <button type="button" class="ytc-btn" id="ytc-fs" aria-label="Tela cheia" onclick="window.ytMainFullscreen(event)"><i class="fa-solid fa-expand"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         VIEWER DE APRESENTAÇÃO / SLIDES IN-SITE (ESTILO NETFLIX PLAYER)
+         ======================================================= -->
+    <div id="custom-pdf-viewer" class="pdf-viewer-overlay">
+        <div class="pdf-viewer-header">
+            <button class="pdf-back-btn" onclick="window.closePdfViewer()">
+                <i class="fa-solid fa-arrow-left"></i> Voltar ao Catálogo
+            </button>
+            <div class="pdf-viewer-title-box">
+                <span class="pdf-badge" id="pdf-viewer-badge"><i class="fa-solid fa-file-powerpoint"></i> SLIDES</span>
+                <span id="pdf-viewer-title" class="pdf-viewer-title">Nome do Trabalho</span>
+                <span id="pdf-slide-counter" class="pdf-slide-counter" style="display: none;">Slide 1 de 1</span>
+            </div>
+            <div class="pdf-viewer-actions">
+                <button type="button" class="pdf-action-btn" id="pdf-thumbnails-toggle" onclick="window.toggleSlideThumbnailsModal()" title="Ver Todos os Slides em Grade">
+                    <i class="fa-solid fa-table-cells"></i> <span style="font-size: 0.8rem; margin-left: 4px;">Grade de Slides</span>
+                </button>
+                <button type="button" class="pdf-action-btn" id="pdf-mode-toggle" onclick="window.togglePdfViewerMode()" title="Alternar entre Leitor Nativo e PDF">
+                    <i class="fa-solid fa-file-lines"></i> <span style="font-size: 0.8rem; margin-left: 4px;">PDF Original</span>
+                </button>
+                <a id="pdf-external-link" href="#" target="_blank" rel="noopener" class="pdf-action-btn" title="Baixar / Abrir em nova aba">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <button type="button" class="pdf-action-btn" onclick="window.togglePdfFullscreen()" title="Tela Cheia">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- STAGE DO PLAYER NATIVO DE SLIDES -->
+        <div class="netflix-slide-stage" id="netflix-slide-stage">
+            <button type="button" class="slide-nav-btn prev" id="slide-btn-prev" onclick="window.navSlide(-1)" aria-label="Slide anterior">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            
+            <div class="slide-viewport">
+                <img id="netflix-slide-img" src="" alt="Slide atual" />
+            </div>
+
+            <button type="button" class="slide-nav-btn next" id="slide-btn-next" onclick="window.navSlide(1)" aria-label="Próximo slide">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- BARRA DE PROGRESSO DO SLIDE NO RODAPÉ -->
+            <div class="slide-player-bottom-bar">
+                <div class="slide-progress-track" id="slide-progress-track">
+                    <div class="slide-progress-fill" id="slide-progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FALLBACK IFRAME (SEPARADO) -->
+        <div class="pdf-viewer-body" id="pdf-iframe-body" style="display: none;">
+            <iframe id="main-pdf-iframe" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- MODAL GRADE DE MINIATURAS (VISÃO GERAL DE SLIDES) -->
+    <div id="slide-thumbnails-overlay" class="slide-thumbnails-overlay" onclick="window.closeSlideThumbnailsModal(event)">
+        <div class="slide-thumbnails-header">
+            <h2><i class="fa-solid fa-table-cells" style="color:var(--netflix-red);"></i> Todos os Slides do Trabalho</h2>
+            <button type="button" class="slide-thumbnails-close-btn" onclick="window.closeSlideThumbnailsModal(event, true)" title="Fechar Grade"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slide-thumbnails-grid" id="slide-thumbnails-grid">
+            <!-- Miniaturas geradas dinamicamente via JS -->
+        </div>
+    </div>
+
+    <!-- =======================================================
+         CENA PÓS-CRÉDITOS
+         ======================================================= -->
+    <div id="post-credits-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: none; align-items: center; justify-content: center;">
+        <video id="post-credits-video" playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+        <button onclick="skipPostCredits()" style="position: absolute; bottom: 30px; right: 30px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: bold; transition: 0.3s; z-index: 10001;">Pular Cena <i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <!-- SEGUNDA CENA PÓS-CRÉDITOS (FIM DA APRESENTAÇÃO) -->
+    <div id="final-post-credits-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: none; align-items: center; justify-content: center;">
+        <video id="final-post-credits-video" playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+        <button onclick="skipFinalCredits()" style="position: absolute; bottom: 30px; right: 30px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: bold; transition: 0.3s; z-index: 10001;">Pular Cena <i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <!-- =======================================================
+         TELA DE QUIZ INTERATIVO
+         ======================================================= -->
+    <div id="quiz-screen" class="screen">
+        <div class="player-header" style="background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);">
+            <button type="button" class="control-btn" aria-label="Voltar" onclick="window.exitQuiz()"><i class="fa-solid fa-arrow-left"></i></button>
+            <div style="display:flex; flex-direction: column; margin-left: 10px;">
+                <span style="font-weight: bold;">Guerra Civil: O Quiz</span>
+                <span id="quiz-progress-text" style="color: #aaa; font-size: 0.9rem;">Questão 1 de 7</span>
+            </div>
+            <span style="margin-left: auto; background: #fff; color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🗣 <span id="quiz-presenter-name">Todos</span></span>
+        </div>
+
+        <div class="quiz-container">
+            <div class="quiz-header-info" id="quiz-title">QUESTÃO 01</div>
+            <div class="quiz-context" id="quiz-context"></div>
+            <h2 class="quiz-question" id="quiz-question">Carregando pergunta...</h2>
+            
+            <div class="quiz-options-grid" id="quiz-options">
+                <!-- Botões gerados via JS -->
+            </div>
+
+            <button id="btn-next-quiz" onclick="nextQuizQuestion()">Próxima Questão <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         MODAL INFORMATIVO (CONTA / AJUDA)
+         ======================================================= -->
+    <div id="info-modal-overlay" onclick="window.closeInfoModal(event)">
+        <div class="info-modal-box">
+            <button type="button" class="info-modal-close" aria-label="Fechar" onclick="window.closeInfoModal(event, true)"><i class="fa-solid fa-xmark"></i></button>
+            <h2 id="info-modal-title">Título</h2>
+            <div id="info-modal-body">Conteúdo</div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         GAVETA DE CENAS / CAPÍTULOS
+         ======================================================= -->
+    <div id="scenes-drawer-overlay" class="scenes-drawer-overlay" onclick="window.toggleScenesDrawer(false)">
+        <div class="scenes-drawer-box" onclick="event.stopPropagation()">
+            <div class="scenes-drawer-header">
+                <div class="scenes-drawer-title">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Capítulos &amp; Cenas</span>
+                </div>
+                <button type="button" class="drawer-close-btn" onclick="window.toggleScenesDrawer(false)" aria-label="Fechar gaveta"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="scenes-drawer-list" id="scenes-drawer-list">
+                <!-- Cenas renderizadas via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         MODAL DE RESUMO DE ESTUDOS (GUIA DA REVOLUÇÃO CIENTÍFICA)
+         ======================================================= -->
+    <div id="resumo-modal-overlay" class="resumo-modal-overlay" onclick="window.closeResumoModal(event)">
+        <div class="resumo-modal-box" onclick="event.stopPropagation()">
+            <div class="resumo-modal-header">
+                <div class="resumo-badges">
+                    <span class="badge-tag"><i class="fa-solid fa-graduation-cap"></i> Filosofia Moderna</span>
+                    <span class="badge-tag sub"><i class="fa-solid fa-book-bookmark"></i> Grupo 6 &bull; IFPI</span>
+                </div>
+                <button type="button" class="resumo-close-btn" onclick="window.closeResumoModal(event, true)" aria-label="Fechar resumo"><i class="fa-solid fa-xmark"></i></button>
+                <h2>A Revolução Científica Moderna</h2>
+                <p class="resumo-sub">Guia rápido de estudos: da Escolástica Medieval à Síntese Newtoniana (Séculos XVI–XVII)</p>
+            </div>
+
+            <div class="resumo-content-body">
+                
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">01</div>
+                    <div class="resumo-topic-text">
+                        <h3>A Escolástica e o Princípio de Autoridade</h3>
+                        <p><strong>Contexto:</strong> Durante a Idade Média, o saber sobre o cosmos era dominado pela <em>Escolástica</em> — a fusão da teologia católica com a física aristotélica.</p>
+                        <ul>
+                            <li><strong>Princípio de Autoridade (<em>Magister Dixit</em>):</strong> A verdade de uma afirmação dependia de <em>quem</em> a proferia (a Bíblia, os teólogos ou Aristóteles), e não de experimentos empíricos ou testes práticos.</li>
+                            <li><strong>Cosmovisão Fechada:</strong> A Terra era vista como um lugar corruptível cercado por esferas celestes perfeitas e imutáveis, governadas por causas metafísicas e teológicas.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">02</div>
+                    <div class="resumo-topic-text">
+                        <h3>O Renascimento e a Crise do Geocentrismo</h3>
+                        <p><strong>A Virada Humanista:</strong> O Renascimento recolocou o ser humano e a razão no centro da investigação (Humanismo e Antropocentrismo).</p>
+                        <ul>
+                            <li><strong>O Modelo Ptolomaico (Geocentrismo):</strong> Defendia a Terra fixa e imóvel no centro do Universo, com o Sol, a Lua e os outros astros girando ao seu redor.</li>
+                            <li><strong>Novas Necessidades Práticas:</strong> As grandes navegações, o comércio internacional e a imprensa demandavam cálculos astronômicos e mapas que a física medieval não conseguia responder.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">03</div>
+                    <div class="resumo-topic-text">
+                        <h3>A Grande Ruptura: Da Contemplação à Ação</h3>
+                        <p>A ciência moderna nasce de uma transformação profunda de postura diante da realidade:</p>
+                        <ul>
+                            <li>O ser humano abandona a contemplação puramente passiva ou mística da natureza.</li>
+                            <li>A natureza passa a ser concebida como uma <strong>realidade observável, mecânica e matemática</strong>, aberta à intervenção, testes práticos e controle técnico.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">04</div>
+                    <div class="resumo-topic-text">
+                        <h3>A Revolução Cosmológica</h3>
+                        <p>A reconstrução completa do mapa do cosmos por três grandes astrônomos:</p>
+                        <ul>
+                            <li><strong>Nicolau Copérnico (Heliocentrismo):</strong> Propôs matematicamente que o Sol ocupa o centro do sistema e que a Terra é apenas mais um planeta que orbita ao seu redor.</li>
+                            <li><strong>Johannes Kepler (Órbitas Elípticas):</strong> Quebrou o dogma aristotélico de que os movimentos celestes precisavam ser círculos perfeitos, demonstrando que as órbitas dos planetas são elípticas.</li>
+                            <li><strong>Galileu Galilei (Telescópio e Linguagem Matemática):</strong> Realizou observações empíricas decisivas (montanhas na Lua, luas de Júpiter, manchas solares). Afirmou que <em>"O livro da natureza está escrito em caracteres matemáticos"</em> e defendeu a experimentação prática.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">05</div>
+                    <div class="resumo-topic-text">
+                        <h3>O Empirismo Moderno (Francis Bacon)</h3>
+                        <p><strong>Palavra de Ordem:</strong> <em>"Saber é Poder"</em> — a ciência deve produzir utilidade prática e tecnologias para a humanidade.</p>
+                        <ul>
+                            <li><strong>Método Indutivo:</strong> O conhecimento científico deve partir de observações rigorosas e experimentos repetidos particulares para, gradualmente, formular leis universais.</li>
+                            <li><strong>A Teoria dos 4 Ídolos (Preconceitos que cegam a mente):</strong>
+                                <ul>
+                                    <li><em>Ídolos da Tribo:</em> Limitações e ilusões inerentes à própria espécie humana (ex.: projetar desejos na realidade).</li>
+                                    <li><em>Ídolos da Caverna:</em> Preconceitos individuais formados pela educação, criação e experiências pessoais de cada indivíduo.</li>
+                                    <li><em>Ídolos do Foro (Mercado):</em> Confusões e enganos causados pelas ambiguidades da linguagem e das palavras.</li>
+                                    <li><em>Ídolos do Teatro:</em> Crenças cegas em dogmas tradicionais e sistemas filosóficos ultrapassados aceitos como verdades absolutas.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">06</div>
+                    <div class="resumo-topic-text">
+                        <h3>O Racionalismo Moderno (René Descartes)</h3>
+                        <p><strong>Palavra de Ordem:</strong> A razão pura e as ideias claras e distintas como base inquestionável do conhecimento.</p>
+                        <ul>
+                            <li><strong>Dúvida Metódica:</strong> Técnica radical de questionamento: duvidar de tudo que venha dos sentidos (que podem enganar), da tradição e até da realidade do mundo físico.</li>
+                            <li><strong>O Cogito (<em>"Cogito, ergo sum"</em>):</strong> Ao duvidar de tudo, percebeu que duvidar é um ato de pensamento. Se penso, existo necessariamente como ser pensante. A dedução lógica e a geometria tornam-se o modelo para o saber seguro.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="resumo-section">
+                    <div class="resumo-topic-num">07</div>
+                    <div class="resumo-topic-text">
+                        <h3>A Síntese Newtoniana (Isaac Newton)</h3>
+                        <p><strong>A Consolidação da Ciência Moderna:</strong> A união definitiva entre o <em>Empirismo</em> e o <em>Racionalismo</em>.</p>
+                        <ul>
+                            <li><strong>Método Hipotético-Dedutivo:</strong> Observação e experimentação empírica (Bacon) aliadas à formulação lógica e cálculo matemático rigoroso (Descartes).</li>
+                            <li><strong>Gravitação Universal:</strong> Newton unificou a física terrestre e astronômica sob as mesmas leis universais: a mesma força que faz a maçã cair é a que mantém os planetas em órbita ao redor do Sol.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <div class="resumo-comparison-table-wrapper">
+                    <h4>Quadro Comparativo: As Quatro Abordagens do Saber</h4>
+                    <table class="resumo-table">
+                        <thead>
+                            <tr>
+                                <th>Abordagem</th>
+                                <th>Origem da Verdade</th>
+                                <th>Método Central</th>
+                                <th>Principal Pensador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Escolástica</strong></td>
+                                <td>Autoridade e Dogmas Religiosos</td>
+                                <td>Silogismo e Tradição Teológica</td>
+                                <td>Tomás de Aquino / Aristóteles</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Empirismo</strong></td>
+                                <td>Sentidos e Experiência Prática</td>
+                                <td>Indução e Experimentação</td>
+                                <td>Francis Bacon</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Racionalismo</strong></td>
+                                <td>Razão Pura e Lógica Dedutiva</td>
+                                <td>Dúvida Metódica e Dedução</td>
+                                <td>René Descartes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ciência Moderna</strong></td>
+                                <td>Síntese: Fatos + Modelagem Matemática</td>
+                                <td>Método Hipotético-Dedutivo</td>
+                                <td>Isaac Newton / Galileu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="resumo-footer-actions">
+                <button type="button" class="resumo-btn-secondary" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir / Salvar PDF</button>
+                <button type="button" class="resumo-btn-primary" onclick="window.closeResumoModal(event, true)">Fechar Guia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST GLOBAL (NOTIFICAÇÕES DA TURMA / COMPARTILHAMENTO) -->
+    <div id="global-toast" class="global-toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="global-toast-msg">Mensagem</span>
+    </div>
+
+</body>
+</html>
